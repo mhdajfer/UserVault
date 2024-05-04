@@ -1,7 +1,12 @@
+import { Routes, Route } from "react-router-dom";
+import { LoginPage } from "./Pages/LoginPage";
+
 function App() {
   return (
     <>
-      <h1 className="bg-green-400">UserVault</h1>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+      </Routes>
     </>
   );
 }

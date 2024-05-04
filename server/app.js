@@ -1,10 +1,19 @@
 const express = require("express");
+const cors = require("cors");
+const ConnectMongoDB = require("./Config/ConnectDB");
+require("dotenv").config();
 const app = express();
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-app.get("/", (req, res) => {
-  res.send("Hi, Welcome ");
+//connect db
+ConnectMongoDB();
+
+app.use(cors());
+
+app.post("/api/login", (req, res) => {
+  console.log("req.body");
+  res.json({ success: true, message: "Login successful" });
 });
 
 app.listen(port, () => {
