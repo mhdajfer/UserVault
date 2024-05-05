@@ -1,17 +1,11 @@
 import { useState } from "react";
 import loginImg from "../assets/loginImg.jpg";
 import axios, { AxiosResponse } from "axios";
-
-type resType = {
-  success: boolean;
-  message: string;
-};
+import { axiosResponseType } from "../Types/Types";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-
-  const url = "http://localhost:3000/api";
 
   const handleEmailChange = (e: React.FormEvent<HTMLInputElement>) => {
     setEmail(e.currentTarget.value);
@@ -23,10 +17,27 @@ export const LoginPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res: AxiosResponse<resType> = await axios.post(`${url}/login`);
+    try {
+      const res: AxiosResponse<axiosResponseType> = await axios.post(
+        `${import.meta.env.VITE_API_URL}/user/login`,
+        {
+          email,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
-    if (res.data.success) {
-      alert(res.data.message);
+      if (res.data.success) {
+        alert(res.data.message);
+      } else {
+        console.log("Login failed:", res.data.message);
+        alert(res.data.message);
+      }
+    } catch (error) {
+      console.error("Error logging in:", error);
+      alert("Error logging in. Please try again.");
     }
   };
 
