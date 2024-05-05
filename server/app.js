@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const ConnectMongoDB = require("./Config/ConnectDB");
 require("dotenv").config();
+const UserRouter = require("./Routes/UserRouter");
+
 const app = express();
 
 const port = process.env.PORT || 3000;
@@ -9,12 +11,16 @@ const port = process.env.PORT || 3000;
 //connect db
 ConnectMongoDB();
 
-app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
-app.post("/api/login", (req, res) => {
-  console.log("req.body");
-  res.json({ success: true, message: "Login successful" });
-});
+app.use("/api/user", UserRouter);
 
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
