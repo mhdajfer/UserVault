@@ -1,4 +1,5 @@
 const UserModel = require("../Models/User");
+const bcrypt = require("bcrypt");
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;
@@ -15,7 +16,9 @@ exports.login = async (req, res) => {
       return res.json({ success: false, message: "User not found" });
     }
 
-    if (user.password === password) {
+    const isSame = await bcrypt.compare(password, user.password);
+
+    if (isSame) {
       return res.json({
         success: true,
         message: "User successfully Logged in",
