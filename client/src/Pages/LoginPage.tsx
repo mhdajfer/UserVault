@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import loginImg from "../assets/loginImg.jpg";
 import axios, { AxiosResponse } from "axios";
 import { axiosResponseType } from "../Types/Types";
+import { useNavigate } from "react-router-dom";
 
 export const LoginPage = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -30,7 +32,11 @@ export const LoginPage = () => {
       );
 
       if (res.data.success) {
-        alert(res.data.message);
+        res.data.token
+          ? localStorage.setItem("token", res.data.token)
+          : console.log("token not available");
+
+        navigate("/home");
       } else {
         console.log("Login failed:", res.data.message);
         alert(res.data.message);
@@ -40,6 +46,11 @@ export const LoginPage = () => {
       alert("Error logging in. Please try again.");
     }
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) navigate("/home");
+  });
 
   return (
     <div className="min-h-screen flex items-center justify-evenly py-12 px-4 sm:px-6 lg:px-8">

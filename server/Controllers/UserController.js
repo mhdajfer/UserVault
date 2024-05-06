@@ -1,5 +1,6 @@
 const UserModel = require("../Models/User");
 const bcrypt = require("bcrypt");
+const { createToken } = require("../Utils/Jwt/createToken");
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;
@@ -19,10 +20,22 @@ exports.login = async (req, res) => {
     const isSame = await bcrypt.compare(password, user.password);
 
     if (isSame) {
-      return res.json({
-        success: true,
-        message: "User successfully Logged in",
-      });
+      //create token
+      const token = createToken(user?._id);
+      if (!token)
+        return res.json({
+          success: false,
+          messsage: "Internal server error-token",
+        });
+      return (
+        res
+          // .setHeader("Authorization", `Bearer ${token}`)
+          .json({
+            success: true,
+            message: "User successfully Logged in",
+            token: token,
+          })
+      );
     } else
       res.status(200).json({ success: false, message: "Invalid password" });
   } catch (error) {

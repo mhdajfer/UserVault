@@ -1,6 +1,7 @@
 export type axiosResponseType = {
   success: boolean;
   message: string;
+  token?: string;
 };
 
 export type signupStateType = {
