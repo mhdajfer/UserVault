@@ -1,40 +1,53 @@
-import React, { useState } from "react";
-import { signupStateType, axiosResponseType } from "../Types/Types";
+import React, { useEffect } from "react";
+import { userState, axiosResponseType } from "../Types/Types";
 import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const SignupPage = () => {
-  const [formData, setFormData] = useState<signupStateType>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    phone: "",
-    age: "",
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const formData = useSelector((state: userState) => state);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) navigate("/home");
   });
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
+
+    dispatch({
+      type: "SET_USER_DATA",
+      payload: { [name]: value },
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      return alert("password mismatch");
+      return toast.error("password mismatch");
     }
-    const response = await axios.post<axiosResponseType>(
-      `${import.meta.env.VITE_API_URL}/user/signup`,
-      formData,
-      { withCredentials: true }
-    );
+    try {
+      const response = await axios.post<axiosResponseType>(
+        `${import.meta.env.VITE_API_URL}/user/signup`,
+        formData,
+        { withCredentials: true }
+      );
 
-    if (response.data.success) alert(response.data.message);
-    else alert(response.data.message);
+      if (response.data.success) {
+        toast.success(response.data.message);
+        dispatch({
+          type: "CLEAR",
+          payload: "",
+        });
+      } else toast.error(response.data.message);
+    } catch (error) {
+      console.log("error with api while creating user", error);
+      toast.error("error with api while creating user");
+    }
   };
 
   return (

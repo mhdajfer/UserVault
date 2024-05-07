@@ -1,24 +1,23 @@
-import { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import loginImg from "../assets/loginImg.jpg";
 import axios, { AxiosResponse } from "axios";
-import { axiosResponseType } from "../Types/Types";
+import { axiosResponseType, userState } from "../Types/Types";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import toast from "react-hot-toast";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const dispatch = useDispatch();
 
-  const handleEmailChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setEmail(e.currentTarget.value);
-  };
-
-  const handlePasswordChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setPassword(e.currentTarget.value);
-  };
+  const { email, password } = useSelector((state: userState) => ({
+    email: state.email,
+    password: state.password,
+  }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
       const res: AxiosResponse<axiosResponseType> = await axios.post(
         `${import.meta.env.VITE_API_URL}/user/login`,
@@ -32,19 +31,31 @@ export const LoginPage = () => {
       );
 
       if (res.data.success) {
-        res.data.token
-          ? localStorage.setItem("token", res.data.token)
-          : console.log("token not available");
+        localStorage.setItem("token", res.data.token ? res.data.token : "");
+        toast.success(res.data.message);
 
         navigate("/home");
       } else {
         console.log("Login failed:", res.data.message);
-        alert(res.data.message);
+        toast.error(res.data.message);
       }
     } catch (error) {
       console.error("Error logging in:", error);
-      alert("Error logging in. Please try again.");
+      toast.error("Error logging in. Please try again.");
+    } finally {
+      dispatch({
+        type: "CLEAR",
+      });
     }
+  };
+
+  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+    const { name, value } = e.currentTarget;
+
+    dispatch({
+      type: "SET_USER_DATA",
+      payload: { [name]: value },
+    });
   };
 
   useEffect(() => {
@@ -74,7 +85,7 @@ export const LoginPage = () => {
                 autoComplete="email"
                 required
                 value={email}
-                onChange={handleEmailChange}
+                onChange={handleChange}
                 className=" w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md  mb-6 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
               />
@@ -87,7 +98,7 @@ export const LoginPage = () => {
                 autoComplete="current-password"
                 required
                 value={password}
-                onChange={handlePasswordChange}
+                onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md mb-6 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
               />

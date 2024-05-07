@@ -4,12 +4,13 @@ export type axiosResponseType = {
   token?: string;
 };
 
-export type signupStateType = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
+export type userState = {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  password?: string;
   confirmPassword?: string;
-  phone: string;
-  age: string;
+  phone?: string;
+  age?: string;
+  userAuthenticated?: boolean;
 };
