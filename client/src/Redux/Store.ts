@@ -9,7 +9,6 @@ const initialState: userState = {
   email: "",
   password: "",
   confirmPassword: "",
-  userAuthenticated: false,
 };
 
 //reducer function
@@ -24,7 +23,19 @@ const userReducer = (
         ...action.payload,
       };
     case "CLEAR":
-      return initialState;
+      return {
+        ...initialState,
+      };
+    case "LOGIN":
+      return {
+        ...state,
+        userAuthenticated: true,
+      };
+    case "LOGOUT":
+      return {
+        ...state,
+        userAuthenticated: false,
+      };
 
     default:
       return state;

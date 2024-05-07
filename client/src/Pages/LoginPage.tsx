@@ -33,6 +33,9 @@ export const LoginPage = () => {
       if (res.data.success) {
         localStorage.setItem("token", res.data.token ? res.data.token : "");
         toast.success(res.data.message);
+        dispatch({
+          type: "LOGIN",
+        });
 
         navigate("/home");
       } else {

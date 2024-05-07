@@ -12,5 +12,4 @@ export type userState = {
   confirmPassword?: string;
   phone?: string;
   age?: string;
-  userAuthenticated?: boolean;
 };

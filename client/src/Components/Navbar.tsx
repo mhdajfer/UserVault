@@ -1,8 +1,10 @@
 import { RiAccountCircleLine } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 function Navbar() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   return (
     <>
       <div className="bg-[#41B06E] min-h-16 w-full fixed top-0 flex items-center justify-between px-8">
@@ -18,6 +20,9 @@ function Navbar() {
         <button
           onClick={() => {
             localStorage.clear();
+            dispatch({
+              type: "LOGOUT",
+            });
             navigate("/login");
           }}
           type="button"

@@ -1,8 +1,7 @@
-import React from "react";
 import Navbar from "../Components/Navbar";
 import homeImg from "../assets/homePageImg.png";
 
-export const HomePage = () => {
+const HomePage = () => {
   return (
     <div>
       <Navbar />
@@ -26,3 +25,5 @@ export const HomePage = () => {
     </div>
   );
 };
+
+export default HomePage;
