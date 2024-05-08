@@ -3,6 +3,7 @@ export type axiosResponseType = {
   message?: string;
   token?: string;
   user?: userState;
+  userList?: userState[];
 };
 
 export type userState = {

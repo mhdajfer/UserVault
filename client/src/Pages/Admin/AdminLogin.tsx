@@ -4,10 +4,13 @@ import { axiosResponseType, userState } from "../../Types/Types";
 import axios, { AxiosResponse } from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  
   const { email, password } = useSelector((state: userState) => ({
     email: state.email,
     password: state.password,
@@ -39,7 +42,7 @@ const AdminLogin = () => {
 
       if (res.data.success) {
         localStorage.setItem("token", res.data.token ? res.data.token : "");
-        toast.success(res.data.message);
+        toast.success(res.data.message || "success");
         dispatch({
           type: "LOGIN",
           payload: {
@@ -51,11 +54,14 @@ const AdminLogin = () => {
             admin: res.data.user?.admin,
           },
         });
+        Cookies.set("token", res.data.token ? res.data.token : "", {
+          expires: 7,
+        });
 
         navigate("/admin/home");
       } else {
         console.log("Login failed:", res.data.message);
-        toast.error(res.data.message);
+        toast.error(res.data.message || "failed");
       }
     } catch (error) {
       console.error("Error logging in:", error);

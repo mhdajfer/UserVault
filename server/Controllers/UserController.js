@@ -93,9 +93,16 @@ exports.signup = async (req, res) => {
 exports.getUser = async (req, res) => {
   const { token } = req.cookies;
 
-  const user = jwt.verify(token, process.env.JWT_SECRET_KEY);
+  if (!token) return res.json({ success: false, message: "not authenticated" });
 
-  const userData = await UserModel.findOne({ _id: user.id });
+  try {
+    const user = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
-  res.status(200).json({ success: true, user: userData });
+    const userData = await UserModel.findOne({ _id: user.id });
+
+    res.status(200).json({ success: true, user: userData });
+  } catch (error) {
+    console.log("error while getting user", error);
+    res.json({ success: false, message: "Internal error " });
+  }
 };

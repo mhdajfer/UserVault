@@ -5,6 +5,7 @@ import Homepage from "./Pages/User/HomePage";
 import { Toaster } from "react-hot-toast";
 import { PrivateRoute } from "./Utils/PrivateRoute";
 import AdminRoutes from "./Routes/AdminRoutes";
+import UserProfile from "./Pages/Admin/UserProfile";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/signup" element={<SignupPage />} />
           <Route element={<PrivateRoute />}>
             <Route path="/home" element={<Homepage />} />
+            <Route path="/profile" element={<UserProfile />} />
           </Route>
           <Route path="/admin/*" element={<AdminRoutes />} />
         </Routes>
