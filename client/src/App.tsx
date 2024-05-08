@@ -1,9 +1,10 @@
 import { Routes, Route } from "react-router-dom";
-import { LoginPage } from "./Pages/LoginPage";
-import SignupPage from "./Pages/SignUpPage";
-import Homepage from "./Pages/HomePage";
+import { LoginPage } from "./Pages/User/LoginPage";
+import SignupPage from "./Pages/User/SignUpPage";
+import Homepage from "./Pages/User/HomePage";
 import { Toaster } from "react-hot-toast";
 import { PrivateRoute } from "./Utils/PrivateRoute";
+import AdminRoutes from "./Routes/AdminRoutes";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route element={<PrivateRoute />}>
             <Route path="/home" element={<Homepage />} />
           </Route>
+          <Route path="/admin/*" element={<AdminRoutes />} />
         </Routes>
       </div>
       <Toaster />

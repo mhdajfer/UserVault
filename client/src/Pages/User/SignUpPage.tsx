@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { userState, axiosResponseType } from "../Types/Types";
+import { userState, axiosResponseType } from "../../Types/Types";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";

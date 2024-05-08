@@ -1,7 +1,8 @@
 export type axiosResponseType = {
   success: boolean;
-  message: string;
+  message?: string;
   token?: string;
+  user?: userState;
 };
 
 export type userState = {
@@ -12,4 +13,5 @@ export type userState = {
   confirmPassword?: string;
   phone?: string;
   age?: string;
+  admin?: boolean;
 };

@@ -9,6 +9,7 @@ const initialState: userState = {
   email: "",
   password: "",
   confirmPassword: "",
+  admin: false,
 };
 
 //reducer function
@@ -29,12 +30,11 @@ const userReducer = (
     case "LOGIN":
       return {
         ...state,
-        userAuthenticated: true,
+        ...action.payload,
       };
     case "LOGOUT":
       return {
-        ...state,
-        userAuthenticated: false,
+        ...initialState,
       };
 
     default:

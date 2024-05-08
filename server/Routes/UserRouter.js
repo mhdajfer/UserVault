@@ -10,4 +10,8 @@ router.post("/signup", (req, res) => {
   UserController.signup(req, res);
 });
 
+router.get("/getUser", (req, res) => {
+  UserController.getUser(req, res);
+});
+
 module.exports = router;

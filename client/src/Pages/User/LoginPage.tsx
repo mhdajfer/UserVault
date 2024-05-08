@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
-import loginImg from "../assets/loginImg.jpg";
+import loginImg from "../../assets/loginImg.jpg";
 import axios, { AxiosResponse } from "axios";
-import { axiosResponseType, userState } from "../Types/Types";
+import { axiosResponseType, userState } from "../../Types/Types";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";
+import Cookies from "js-cookie";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
@@ -30,25 +31,32 @@ export const LoginPage = () => {
         }
       );
 
-      if (res.data.success) {
+      if (res.data.success && res.data.message) {
         localStorage.setItem("token", res.data.token ? res.data.token : "");
+        Cookies.set("token", res.data.token ? res.data.token : "", {
+          expires: 7,
+        });
         toast.success(res.data.message);
         dispatch({
           type: "LOGIN",
+          payload: {
+            firstName: res.data.user?.firstName,
+            lastName: res.data.user?.lastName,
+            email: res.data.user?.email,
+            phone: res.data.user?.phone,
+            age: res.data.user?.age,
+            admin: res.data.user?.admin,
+          },
         });
 
         navigate("/home");
       } else {
         console.log("Login failed:", res.data.message);
-        toast.error(res.data.message);
+        toast.error(res.data.message || "failed");
       }
     } catch (error) {
       console.error("Error logging in:", error);
       toast.error("Error logging in. Please try again.");
-    } finally {
-      dispatch({
-        type: "CLEAR",
-      });
     }
   };
 

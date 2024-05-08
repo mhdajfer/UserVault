@@ -1,6 +1,7 @@
 const UserModel = require("../Models/User");
 const bcrypt = require("bcrypt");
 const { createToken } = require("../Utils/Jwt/createToken");
+const jwt = require("jsonwebtoken");
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;
@@ -15,6 +16,13 @@ exports.login = async (req, res) => {
     const user = await UserModel.findOne({ email });
     if (!user) {
       return res.json({ success: false, message: "User not found" });
+    }
+
+    if (user?.admin) {
+      return res.json({
+        success: false,
+        message: "this is not a user account",
+      });
     }
 
     const isSame = await bcrypt.compare(password, user.password);
@@ -34,6 +42,7 @@ exports.login = async (req, res) => {
             success: true,
             message: "User successfully Logged in",
             token: token,
+            user: user,
           })
       );
     } else
@@ -79,4 +88,14 @@ exports.signup = async (req, res) => {
     console.log("Error while creating usr: " + error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
+};
+
+exports.getUser = async (req, res) => {
+  const { token } = req.cookies;
+
+  const user = jwt.verify(token, process.env.JWT_SECRET_KEY);
+
+  const userData = await UserModel.findOne({ _id: user.id });
+
+  res.status(200).json({ success: true, user: userData });
 };
