@@ -5,7 +5,7 @@ import Homepage from "./Pages/User/HomePage";
 import { Toaster } from "react-hot-toast";
 import { PrivateRoute } from "./Utils/PrivateRoute";
 import AdminRoutes from "./Routes/AdminRoutes";
-import UserProfile from "./Pages/Admin/UserProfile";
+import UserProfile from "./Pages/User/UserProfile";
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
-          <Route element={<PrivateRoute />}>
+          <Route element={<PrivateRoute role="user" />}>
             <Route path="/home" element={<Homepage />} />
             <Route path="/profile" element={<UserProfile />} />
           </Route>
