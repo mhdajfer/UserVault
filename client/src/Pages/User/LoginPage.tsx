@@ -6,14 +6,15 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
+import { setUserData, setLoginData } from "../../Redux/user";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { email, password } = useSelector((state: userState) => ({
-    email: state.email,
-    password: state.password,
+  const { email, password } = useSelector((state: { user: userState }) => ({
+    email: state.user.email,
+    password: state.user.password,
   }));
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -36,18 +37,9 @@ export const LoginPage = () => {
         Cookies.set("token", res.data.token ? res.data.token : "", {
           expires: 7,
         });
+
         toast.success(res.data.message);
-        dispatch({
-          type: "LOGIN",
-          payload: {
-            firstName: res.data.user?.firstName,
-            lastName: res.data.user?.lastName,
-            email: res.data.user?.email,
-            phone: res.data.user?.phone,
-            age: res.data.user?.age,
-            admin: res.data.user?.admin,
-          },
-        });
+        dispatch(setUserData(res.data.user));
 
         navigate("/home");
       } else {
@@ -62,11 +54,7 @@ export const LoginPage = () => {
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
-
-    dispatch({
-      type: "SET_USER_DATA",
-      payload: { [name]: value },
-    });
+    dispatch(setLoginData({ [name]: value }));
   };
 
   useEffect(() => {

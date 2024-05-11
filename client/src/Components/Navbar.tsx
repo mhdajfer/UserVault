@@ -16,6 +16,7 @@ function Navbar() {
           <RiAccountCircleLine
             size={20}
             className="cursor-pointer hover:text-[#8DECB4]  transition-all ease-in-out text-[#141E46]"
+            onClick={() => navigate("/profile")}
           />
         </div>
         <button

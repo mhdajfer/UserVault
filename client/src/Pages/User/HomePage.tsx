@@ -1,28 +1,13 @@
 import Navbar from "../../Components/Navbar";
 import homeImg from "../../assets/homePageImg.png";
-import { axiosResponseType, userState } from "../../Types/Types";
-import { useEffect, useState } from "react";
-import axios, { AxiosResponse } from "axios";
+import { userState } from "../../Types/Types";
+import { useSelector } from "react-redux";
 
 const HomePage = () => {
-  const [userData, setUserData] = useState<userState>({});
+  const user = useSelector((state: { user: userState }) => state.user);
 
-  useEffect(() => {
-    getUserData();
-  }, []);
+  console.log(user);
 
-  async function getUserData() {
-    const res: AxiosResponse<axiosResponseType> = await axios.get(
-      `${import.meta.env.VITE_API_URL}/user/getUser`,
-      {
-        withCredentials: true,
-      }
-    );
-
-    if (res.data.success && res.data.user) {
-      setUserData(res.data.user);
-    }
-  }
   return (
     <div>
       <Navbar />
@@ -36,7 +21,7 @@ const HomePage = () => {
           </h1>
           <h1 className="ms-6 text-5xl font-extrabold text-[#141E46]">
             {"   "}
-            Welcome {userData?.firstName}.
+            Welcome {user?.firstName}.
           </h1>
         </div>
         <div className="w-1/3 flex items-center me-16">
