@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import profileImg from "../../assets/profile.jpg";
 import { ImgDb } from "../../Firebase/Config";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import _ from "lodash";
 
 const UserProfile = () => {
   const dispatch = useDispatch();
@@ -18,7 +19,6 @@ const UserProfile = () => {
   const [profileData, setProfileData] = useState<userState>(user);
   const [profilePicture, setProfilePicture] = useState<File>();
 
-  // Function to handle profile picture upload
   const handleProfilePictureUpload = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -54,6 +54,7 @@ const UserProfile = () => {
   };
 
   const handleUpdate = async () => {
+    if (_.isEqual(profileData, user)) return toast.error("no change in data");
     dispatch(setUserData(profileData));
 
     const res = await axios.post(
