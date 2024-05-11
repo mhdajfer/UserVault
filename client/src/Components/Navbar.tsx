@@ -2,6 +2,7 @@ import { RiAccountCircleLine } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
+import { clearStore } from "../Redux/user";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -23,9 +24,7 @@ function Navbar() {
           onClick={() => {
             localStorage.clear();
             Cookies.remove("token");
-            dispatch({
-              type: "LOGOUT",
-            });
+            dispatch(clearStore());
             navigate("/login");
           }}
           type="button"

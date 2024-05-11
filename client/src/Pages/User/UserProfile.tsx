@@ -1,23 +1,73 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { userState } from "../../Types/Types";
 import Navbar from "../../Components/Navbar";
+import { setUserData } from "../../Redux/user";
+import axios from "axios";
+import toast from "react-hot-toast";
+import profileImg from "../../assets/profile.jpg";
+import { ImgDb } from "../../Firebase/Config";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const UserProfile = () => {
+  const dispatch = useDispatch();
+
+  const user = useSelector((state: { user: userState }) => state.user);
+
+  const { firstName, lastName, age, phone, email, image } = user;
+  const [profileData, setProfileData] = useState<userState>(user);
   const [profilePicture, setProfilePicture] = useState<File>();
-  const { firstName, lastName, age, phone, email } = useSelector(
-    (state: { user: userState }) => state.user
-  );
 
   // Function to handle profile picture upload
   const handleProfilePictureUpload = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.currentTarget.files?.[0];
+    console.log(file);
     // Perform any necessary validation or processing
     // For now, just set the profile picture state
 
     setProfilePicture(file);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.currentTarget;
+    setProfileData((prevUser) => ({
+      ...prevUser,
+      [name]: value,
+    }));
+  };
+
+  const uploadImage = async (profilePicture: File) => {
+    const ImgRef = ref(ImgDb, `userVault/${profilePicture.name}`);
+    const data = await uploadBytes(ImgRef, profilePicture);
+    const url = await getDownloadURL(data.ref);
+
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/user/uploadImage`,
+      { url },
+      { withCredentials: true }
+    );
+
+    if (res.data.success) return toast.success(res.data.message);
+    else return toast.error(res.data.message);
+  };
+
+  const handleUpdate = async () => {
+    dispatch(setUserData(profileData));
+
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/user/edit`,
+      profileData,
+      {
+        withCredentials: true,
+      }
+    );
+    console.log(res);
+
+    if (res.data.success) {
+      toast.success(res.data.message);
+    } else toast.error(res.data.message);
   };
 
   return (
@@ -31,7 +81,9 @@ const UserProfile = () => {
               src={
                 profilePicture
                   ? URL.createObjectURL(profilePicture)
-                  : "placeholder.jpg"
+                  : image
+                  ? image
+                  : profileImg
               }
               alt="Profile"
               className="w-32 h-32 rounded-full object-cover"
@@ -43,7 +95,7 @@ const UserProfile = () => {
               accept="image/*"
               onChange={handleProfilePictureUpload}
             />
-            <div className="absolute bottom-0 right-0 bg-white p-1 rounded-full">
+            <div className="absolute bottom-0 right-0 bg-white p-1 rounded-full hover:bg-gray-300">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6 text-gray-600"
@@ -60,6 +112,18 @@ const UserProfile = () => {
               </svg>
             </div>
           </label>
+          <div>
+            {" "}
+            <button
+              type="button"
+              className={`${
+                profilePicture ? "opacity-100" : "opacity-40"
+              } ms-8 text-white bg-blue-700 hover:bg-blue-800   font-medium rounded-lg text-sm px-5 py-2`}
+              onClick={() => profilePicture && uploadImage(profilePicture)}
+            >
+              save image
+            </button>
+          </div>
         </div>
         <div className=" flex  space-y-12 flex-col p-2">
           <div className="flex justify-between items-center">
@@ -70,8 +134,10 @@ const UserProfile = () => {
               <input
                 type="text"
                 id="firstName"
+                name="firstName"
                 className=" border border-gray-300 rounded px-3 mx-4 py-1 w-72"
-                value={firstName}
+                defaultValue={firstName}
+                onChange={handleChange}
               />
             </div>
             <div className="flex">
@@ -81,8 +147,10 @@ const UserProfile = () => {
               <input
                 type="text"
                 id="lastName"
+                name="lastName"
                 className=" border border-gray-300 rounded px-3 mx-4 py-1 w-72"
-                value={lastName}
+                defaultValue={lastName}
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -94,8 +162,10 @@ const UserProfile = () => {
               <input
                 type="text"
                 id="age"
+                name="age"
                 className=" border border-gray-300 rounded px-3 mx-4 py-1 w-72"
-                value={age}
+                defaultValue={age}
+                onChange={handleChange}
               />
             </div>
             <div className="flex">
@@ -104,9 +174,11 @@ const UserProfile = () => {
               </label>
               <input
                 type="text"
+                name="email"
                 id="email"
                 className=" border border-gray-300 rounded px-3 mx-4 py-1 w-72"
-                value={email}
+                defaultValue={email}
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -118,10 +190,21 @@ const UserProfile = () => {
               <input
                 type="text"
                 id="phone"
+                name="phone"
                 className=" border border-gray-300 rounded px-3 mx-4 py-1 w-72"
-                value={phone}
+                defaultValue={phone}
+                onChange={handleChange}
               />
             </div>
+          </div>
+          <div>
+            <button
+              type="button"
+              className="text-white bg-blue-700 hover:bg-blue-800   font-medium rounded-lg text-sm px-5 py-2"
+              onClick={handleUpdate}
+            >
+              Update
+            </button>
           </div>
         </div>
       </div>

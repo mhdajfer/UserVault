@@ -14,4 +14,12 @@ router.get("/getUser", (req, res) => {
   UserController.getUser(req, res);
 });
 
+router.post("/edit", (req, res) => {
+  UserController.editUser(req, res);
+});
+
+router.post('/uploadImage', (req, res) => {
+  UserController.uploadImage(req, res);
+})
+
 module.exports = router;

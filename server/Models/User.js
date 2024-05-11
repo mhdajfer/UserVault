@@ -29,6 +29,9 @@ const UserSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  image: {
+    type: String,
+  },
 });
 
 UserSchema.pre("save", async function (next) {

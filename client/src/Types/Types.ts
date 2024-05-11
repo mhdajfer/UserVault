@@ -15,4 +15,5 @@ export type userState = {
   phone?: string;
   age?: string;
   admin?: boolean;
+  image?: string;
 };

@@ -4,11 +4,12 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { signupData } from "../../Redux/user";
 
 const SignupPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const formData = useSelector((state: userState) => state);
+  const formData = useSelector((state: { user: userState }) => state.user);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -18,10 +19,8 @@ const SignupPage = () => {
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
 
-    dispatch({
-      type: "SET_USER_DATA",
-      payload: { [name]: value },
-    });
+    dispatch(signupData({ ...formData, [name]: value }));
+    console.log(formData);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -38,12 +37,8 @@ const SignupPage = () => {
       );
 
       if (response.data.success) {
-        toast.success(response.data.message);
-        dispatch({
-          type: "CLEAR",
-          payload: "",
-        });
-      } else toast.error(response.data.message);
+        toast.success(response.data.message || "success");
+      } else toast.error(response.data.message || "failed");
     } catch (error) {
       console.log("error with api while creating user", error);
       toast.error("error with api while creating user");

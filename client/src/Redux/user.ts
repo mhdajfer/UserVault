@@ -10,6 +10,7 @@ const initialState: userState = {
   password: "",
   confirmPassword: "",
   admin: false,
+  image: "",
 };
 
 const userSlice = createSlice({
@@ -17,22 +18,46 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUserData: (state, action) => {
-      const { firstName, lastName, email, age, phone, admin } = action.payload;
+      const { firstName, lastName, email, age, phone, admin, image } =
+        action.payload;
       state.firstName = firstName;
       state.lastName = lastName;
       state.email = email;
       state.age = age;
       state.phone = phone;
       state.admin = admin;
+      state.image = image;
     },
     setLoginData: (state, action) => {
       action.payload.email
         ? (state.email = action.payload?.email)
         : (state.password = action.payload?.password || "");
     },
+    signupData: (state, action) => {
+      const {
+        firstName,
+        lastName,
+        email,
+        age,
+        phone,
+        admin,
+        password,
+        confirmPassword,
+      } = action.payload;
+      state.firstName = firstName;
+      state.lastName = lastName;
+      state.email = email;
+      state.age = age;
+      state.phone = phone;
+      state.admin = admin;
+      state.password = password;
+      state.confirmPassword = confirmPassword;
+    },
+    clearStore: () => initialState,
   },
 });
 
-export const { setUserData, setLoginData } = userSlice.actions;
+export const { setUserData, setLoginData, signupData, clearStore } =
+  userSlice.actions;
 
 export default userSlice.reducer;

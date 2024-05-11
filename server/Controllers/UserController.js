@@ -55,6 +55,7 @@ exports.login = async (req, res) => {
 
 exports.signup = async (req, res) => {
   const { firstName, lastName, email, password, phone, age } = req.body;
+  console.log(req.body);
 
   if (!firstName || !lastName || !email || !password || !phone || !age)
     return res.json({
@@ -104,5 +105,57 @@ exports.getUser = async (req, res) => {
   } catch (error) {
     console.log("error while getting user", error);
     res.json({ success: false, message: "Internal error " });
+  }
+};
+
+exports.editUser = async (req, res) => {
+  const { token } = req.cookies;
+  const profileData = req.body;
+
+  if (!token) return res.json({ success: false, message: "not authenticated" });
+
+  try {
+    const user = jwt.verify(token, process.env.JWT_SECRET_KEY);
+
+    const userUpdated = await UserModel.updateOne(
+      { _id: user.id },
+      profileData
+    );
+
+    if (userUpdated)
+      return res
+        .status(200)
+        .json({ success: true, message: "Updated User Profile" });
+    else
+      return res.json({
+        success: false,
+        message: "Not update, try again later!!",
+      });
+  } catch (error) {
+    console.log("error while updating user", error);
+    return res.json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+exports.uploadImage = async (req, res) => {
+  const { url } = req.body;
+  const { token } = req.cookies;
+
+  if (!token) return res.json({ success: false, message: "not authenticated" });
+
+  try {
+    const user = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const imageUploaded = await UserModel.updateOne(
+      { _id: user.id },
+      { image: url }
+    );
+    if (imageUploaded)
+      return res
+        .status(200)
+        .json({ success: true, message: "image uploaded successfully" });
+    else return res.json({ success: false, message: "image not uploaded" });
+  } catch (error) {
+    console.log("error while uploading image", error);
+    return res.json({ success: false, message: "Internal Server Error" });
   }
 };

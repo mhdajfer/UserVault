@@ -6,8 +6,6 @@ import { useSelector } from "react-redux";
 const HomePage = () => {
   const user = useSelector((state: { user: userState }) => state.user);
 
-  console.log(user);
-
   return (
     <div>
       <Navbar />
