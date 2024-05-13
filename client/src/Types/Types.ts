@@ -16,4 +16,5 @@ export type userState = {
   age?: string;
   admin?: boolean;
   image?: string;
+  _id?: string;
 };

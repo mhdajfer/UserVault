@@ -13,7 +13,12 @@ function Navbar() {
     <>
       <div className="bg-[#41B06E] min-h-16 w-full sticky top-0 flex  items-center justify-between px-8">
         <div>
-          <h1 className="text-2xl font-bold text-[#141E46]">UserVault</h1>
+          <h1
+            className="text-2xl font-bold text-[#141E46] cursor-pointer"
+            onClick={() => navigate(isAdmin ? "/admin/home" : "/home")}
+          >
+            UserVault
+          </h1>
         </div>
         <div>
           <RiAccountCircleLine
