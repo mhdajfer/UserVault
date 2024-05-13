@@ -53,11 +53,19 @@ const userSlice = createSlice({
       state.password = password;
       state.confirmPassword = confirmPassword;
     },
+    setProfilePic: (state, action) => {
+      state.image = action.payload.url;
+    },
     clearStore: () => initialState,
   },
 });
 
-export const { setUserData, setLoginData, signupData, clearStore } =
-  userSlice.actions;
+export const {
+  setUserData,
+  setLoginData,
+  signupData,
+  clearStore,
+  setProfilePic,
+} = userSlice.actions;
 
 export default userSlice.reducer;

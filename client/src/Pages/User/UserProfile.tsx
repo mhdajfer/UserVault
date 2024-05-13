@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { userState } from "../../Types/Types";
 import Navbar from "../../Components/Navbar";
-import { setUserData } from "../../Redux/user";
+import { setProfilePic, setUserData } from "../../Redux/user";
 import axios from "axios";
 import toast from "react-hot-toast";
 import profileImg from "../../assets/profile.jpg";
@@ -49,8 +49,10 @@ const UserProfile = () => {
       { withCredentials: true }
     );
 
-    if (res.data.success) return toast.success(res.data.message);
-    else return toast.error(res.data.message);
+    if (res.data.success) {
+      dispatch(setProfilePic({ url }));
+      return toast.success(res.data.message);
+    } else return toast.error(res.data.message);
   };
 
   const handleUpdate = async () => {
