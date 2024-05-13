@@ -5,7 +5,6 @@ const jwt = require("jsonwebtoken");
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;
-  console.log(email, password);
 
   if (!email || !password)
     return res.json({
@@ -19,7 +18,6 @@ exports.login = async (req, res) => {
       return res.json({ success: false, message: "User not found" });
     }
 
-    console.log(user);
 
     if (user?.admin) {
       return res.json({

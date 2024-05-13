@@ -1,12 +1,14 @@
 import { RiAccountCircleLine } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { clearStore } from "../Redux/user";
+import { userState } from "../Types/Types";
 
 function Navbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const isAdmin = useSelector((state: { user: userState }) => state.user.admin);
   return (
     <>
       <div className="bg-[#41B06E] min-h-16 w-full sticky top-0 flex  items-center justify-between px-8">
@@ -17,7 +19,7 @@ function Navbar() {
           <RiAccountCircleLine
             size={20}
             className="cursor-pointer hover:text-[#8DECB4]  transition-all ease-in-out text-[#141E46]"
-            onClick={() => navigate("/profile")}
+            onClick={() => navigate(isAdmin ? "/admin/profile" : "/profile")}
           />
         </div>
         <button

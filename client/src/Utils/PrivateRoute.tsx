@@ -10,7 +10,7 @@ interface PrivateRouteProps {
 
 export const PrivateRoute: React.FC<PrivateRouteProps> = ({ role }) => {
   const userAuthenticated = localStorage.getItem("token") ? true : false;
-  const isAdmin = useSelector((state: userState) => state.admin);
+  const isAdmin = useSelector((state: { user: userState }) => state.user.admin);
 
   //check whether authenticated user and role(route trying to access) are the same
   const sameRole =

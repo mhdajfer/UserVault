@@ -5,24 +5,21 @@ import axios, { AxiosResponse } from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { setLoginData, setUserData } from "../../Redux/user";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  
-  const { email, password } = useSelector((state: userState) => ({
-    email: state.email,
-    password: state.password,
+  const { email, password } = useSelector((state: { user: userState }) => ({
+    email: state.user.email,
+    password: state.user.password,
   }));
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
 
-    dispatch({
-      type: "SET_USER_DATA",
-      payload: { [name]: value },
-    });
+    dispatch(setLoginData({ [name]: value }));
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -43,17 +40,16 @@ const AdminLogin = () => {
       if (res.data.success) {
         localStorage.setItem("token", res.data.token ? res.data.token : "");
         toast.success(res.data.message || "success");
-        dispatch({
-          type: "LOGIN",
-          payload: {
+        dispatch(
+          setUserData({
             firstName: res.data.user?.firstName,
             lastName: res.data.user?.lastName,
             email: res.data.user?.email,
             phone: res.data.user?.phone,
             age: res.data.user?.age,
             admin: res.data.user?.admin,
-          },
-        });
+          })
+        );
         Cookies.set("token", res.data.token ? res.data.token : "", {
           expires: 7,
         });
