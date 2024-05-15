@@ -18,7 +18,6 @@ exports.login = async (req, res) => {
       return res.json({ success: false, message: "User not found" });
     }
 
-
     if (user?.admin) {
       return res.json({
         success: false,
@@ -26,9 +25,9 @@ exports.login = async (req, res) => {
       });
     }
 
-    const isSame = await bcrypt.compare(password, user.password);
+    // const isSame = await bcrypt.compare(password, user.password);
 
-    // const isSame = password === user.password ? true : false;
+    const isSame = password === user.password ? true : false;
 
     if (isSame) {
       //create token
@@ -58,7 +57,6 @@ exports.login = async (req, res) => {
 
 exports.signup = async (req, res) => {
   const { firstName, lastName, email, password, phone, age } = req.body;
-  console.log(req.body);
 
   if (!firstName || !lastName || !email || !password || !phone || !age)
     return res.json({
@@ -160,5 +158,23 @@ exports.uploadImage = async (req, res) => {
   } catch (error) {
     console.log("error while uploading image", error);
     return res.json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  const { userObj } = req.body;
+  const { token } = req.cookies;
+
+  if (!token) return res.json({ success: false, message: "not authenticated" });
+
+  try {
+    // const user = jwt.verify(token, process.env.JWT_SECRET_KEY);
+
+    await UserModel.deleteOne({ _id: userObj._id });
+
+    res.json({ success: true, message: "user deleted successfully" });
+  } catch (error) {
+    console.log("error while getting deleting user", error);
+    res.json({ success: false, message: "user not deleted" });
   }
 };

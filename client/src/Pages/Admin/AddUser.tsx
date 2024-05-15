@@ -15,7 +15,6 @@ const AddUser = () => {
     const { name, value } = e.currentTarget;
 
     dispatch(signupNewUserData({ ...formData, [name]: value }));
-    console.log(formData);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

@@ -18,8 +18,12 @@ router.post("/edit", (req, res) => {
   UserController.editUser(req, res);
 });
 
-router.post('/uploadImage', (req, res) => {
+router.post("/uploadImage", (req, res) => {
   UserController.uploadImage(req, res);
-})
+});
+
+router.post("/deleteUser", (req, res) => {
+  UserController.deleteUser(req, res);
+});
 
 module.exports = router;
