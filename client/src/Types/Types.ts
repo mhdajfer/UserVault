@@ -18,3 +18,8 @@ export type userState = {
   image?: string;
   _id?: string;
 };
+
+export type storeType = {
+  user?: userState;
+  newUser?: userState;
+};

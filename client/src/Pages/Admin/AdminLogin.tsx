@@ -1,4 +1,4 @@
-import React, { FormEvent } from "react";
+import React, { FormEvent, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { axiosResponseType, userState } from "../../Types/Types";
 import axios, { AxiosResponse } from "axios";
@@ -64,6 +64,10 @@ const AdminLogin = () => {
       toast.error("Error logging in. Please try again.");
     }
   };
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) navigate("/admin/home");
+  });
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
