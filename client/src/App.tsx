@@ -3,9 +3,10 @@ import { LoginPage } from "./Pages/User/LoginPage";
 import SignupPage from "./Pages/User/SignUpPage";
 import Homepage from "./Pages/User/HomePage";
 import { Toaster } from "react-hot-toast";
-import PrivateRoute  from "./Utils/PrivateRoute";
+import PrivateRoute from "./Utils/PrivateRoute";
 import AdminRoutes from "./Routes/AdminRoutes";
 import UserProfile from "./Pages/User/UserProfile";
+import { PageNotFound } from "./Pages/PageNotFound";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/profile" element={<UserProfile />} />
           </Route>
           <Route path="/admin/*" element={<AdminRoutes />} />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       </div>
       <Toaster />
